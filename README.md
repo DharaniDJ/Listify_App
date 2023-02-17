@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 FastAPI_CRUD
+=======
+# FastAPI_CRUD
+>>>>>>> 376d41819d597c93368294d99b1b46a4f7b95665
