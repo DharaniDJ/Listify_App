@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from config import setting
 
 tags_metadata = [
     {
@@ -12,11 +13,11 @@ tags_metadata = [
 ]
 
 app = FastAPI(
-    title="My FastAPI",
-    version="0.0.01",
-    description="This is test project",
+    title=setting.TITLE,
+    version=setting.VERSION,
+    description=setting.DESCRIPTION,
     openapi_tags=tags_metadata,
-    contact={"name":"Dharani","email":"dharani56525@gmail.com"}
+    contact={"name":setting.NAME,"email":setting.EMAIL}
 )
 
 
