@@ -31,3 +31,6 @@ def get_user():
 def get_items():
     return {"message":"hello items"}
 
+@app.get('/getenv',tags=["config"])
+def get_env():
+    return {"database":setting.DB_URL}
