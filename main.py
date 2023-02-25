@@ -38,3 +38,7 @@ def get_items():
 @app.get('/getenv',tags=["config"])
 def get_env():
     return {"database":setting.DB_URL}
+
+@app.post('/create_user')
+def create_user():
+    return {}
