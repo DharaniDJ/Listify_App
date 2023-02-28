@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from config import setting
 from database import engine
 from models import Base
+from routers import users, items
 
 Base.metadata.create_all(bind=engine)
 
@@ -24,21 +25,5 @@ app = FastAPI(
     contact={"name":setting.NAME,"email":setting.EMAIL}
 )
 
-
-@app.get('/users',tags=["user"])
-def get_user():
-    return {"message":"hello user"}
-
-
-
-@app.get('/items',tags=['products'])
-def get_items():
-    return {"message":"hello items"}
-
-@app.get('/getenv',tags=["config"])
-def get_env():
-    return {"database":setting.DB_URL}
-
-@app.post('/create_user')
-def create_user():
-    return {}
+app.include_router(users.router)
+app.include_router(items.router)
