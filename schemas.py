@@ -9,4 +9,4 @@ class ShowUser(BaseModel):
     is_active: bool
 
     class Config:
-        orm_mode =True
+        orm_mode =True  # return dictionary, by default it returns an object
