@@ -29,12 +29,10 @@ def override_get_db():
 
 app.dependency_overrides[get_db]=override_get_db
 
-def test_create_user():
+def test_create_item():
     data = {
-        "email":"testuser111@test.com",
-        "password":"testuser111"
+        "title":"Item3",
+        "description":"This is item3"
     }
-    response = client.post("/users", json=data)
+    response = client.post("/item", json=data)
     assert response.status_code==200
-    assert response.json()["email"]=="testuser111@test.com"
-    assert response.json()["is_active"]==True
