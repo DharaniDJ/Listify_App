@@ -12,7 +12,7 @@ tags_metadata = [
         "description":"This is user route"
     },
     {
-        "name":"products",
+        "name":"items",
         "description":"This is product route"
     }
 ]
