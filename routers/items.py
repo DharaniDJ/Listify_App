@@ -40,3 +40,12 @@ def update_item_by_id(id:int, item:ItemCreate,db:Session=Depends(get_db)):
     existing_item.update(jsonable_encoder(item)) # update keyword require jsonable_encoder, we can use item.__dict__ also
     db.commit()
     return {"message":f"Details for Item ID {id} successfully updated"}
+
+@router.delete("/item/delete/{id}",tags=["items"])
+def delete_item_by_id(id:int,db:Session=Depends(get_db)):
+    existing_item = db.query(Items).filter(Items.id==id)
+    if not existing_item.first():
+        return {"message":f"No details exists for Item ID {id}"}
+    existing_item.delete()
+    db.commit()
+    return {"message":f"Item ID {id} has been successfully deleted"}
