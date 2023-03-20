@@ -6,11 +6,12 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from database import get_db
 from fastapi.encoders import jsonable_encoder
+from routers.login import oauth2_scheme
 
 router = APIRouter()
 
 @router.post('/item',tags=["items"],response_model=ShowItem)
-def create_items(item:ItemCreate,db:Session=Depends(get_db)):
+def create_items(item:ItemCreate,db:Session=Depends(get_db), token:str=Depends(oauth2_scheme)):
     date_posted = datetime.now().date()
     owner_id=1
     item = Items(**item.dict(),date_posted=date_posted,owner_id=owner_id)
@@ -32,7 +33,7 @@ def retrieve_item_by_id(id:int, db:Session=Depends(get_db)):
     return item
 
 @router.put("/item/update/{id}",tags=["items"])
-def update_item_by_id(id:int, item:ItemCreate,db:Session=Depends(get_db)):
+def update_item_by_id(id:int, item:ItemCreate,db:Session=Depends(get_db), token:str=Depends(oauth2_scheme)):
     existing_item = db.query(Items).filter(Items.id==id)
     if not existing_item.first():
         return {"message":f'No details exists for Item ID {id}'}
@@ -42,7 +43,7 @@ def update_item_by_id(id:int, item:ItemCreate,db:Session=Depends(get_db)):
     return {"message":f"Details for Item ID {id} successfully updated"}
 
 @router.delete("/item/delete/{id}",tags=["items"])
-def delete_item_by_id(id:int,db:Session=Depends(get_db)):
+def delete_item_by_id(id:int,db:Session=Depends(get_db), token:str=Depends(oauth2_scheme)):
     existing_item = db.query(Items).filter(Items.id==id)
     if not existing_item.first():
         return {"message":f"No details exists for Item ID {id}"}

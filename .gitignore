@@ -10,3 +10,4 @@ logs/
 log/
 .editorconfig
 app/test.db
+notes.txt
