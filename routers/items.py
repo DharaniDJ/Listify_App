@@ -1,19 +1,34 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from schemas import ItemCreate, ShowItem
-from models import Items
+from models import Items, User
 from datetime import datetime
 from sqlalchemy.orm import Session
 from database import get_db
 from fastapi.encoders import jsonable_encoder
 from routers.login import oauth2_scheme
+from jose import jwt
+from config import setting
 
 router = APIRouter()
 
 @router.post('/item',tags=["items"],response_model=ShowItem)
 def create_items(item:ItemCreate,db:Session=Depends(get_db), token:str=Depends(oauth2_scheme)):
+
+    try:
+        payload = jwt.decode(token,setting.SECRET_KEY, algorithms=setting.ALGORITHM)
+        username = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Unable to verify credentials")
+        user = db.query(User).filter(User.email==username).first()
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Unable to verify credentials")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Unable to verify credentials")
+
+
     date_posted = datetime.now().date()
-    owner_id=1
+    owner_id=user.id
     item = Items(**item.dict(),date_posted=date_posted,owner_id=owner_id)
     db.add(item)
     db.commit()
@@ -34,19 +49,50 @@ def retrieve_item_by_id(id:int, db:Session=Depends(get_db)):
 
 @router.put("/item/update/{id}",tags=["items"])
 def update_item_by_id(id:int, item:ItemCreate,db:Session=Depends(get_db), token:str=Depends(oauth2_scheme)):
+
+    try:
+        payload = jwt.decode(token,setting.SECRET_KEY, algorithms=setting.ALGORITHM)
+        username = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Unable to verify credentials")
+        user = db.query(User).filter(User.email==username).first()
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Unable to verify credentials")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Unable to verify credentials")
+
     existing_item = db.query(Items).filter(Items.id==id)
     if not existing_item.first():
         return {"message":f'No details exists for Item ID {id}'}
 
-    existing_item.update(jsonable_encoder(item)) # update keyword require jsonable_encoder, we can use item.__dict__ also
-    db.commit()
-    return {"message":f"Details for Item ID {id} successfully updated"}
+    if existing_item.first().owner_id == user.id:
+        existing_item.update(jsonable_encoder(item)) # update keyword require jsonable_encoder, we can use item.__dict__ also
+        db.commit()
+        return {"message":f"Details for Item ID {id} successfully updated"}
+    else:
+        return {"message":"you are not authorized"}
 
 @router.delete("/item/delete/{id}",tags=["items"])
 def delete_item_by_id(id:int,db:Session=Depends(get_db), token:str=Depends(oauth2_scheme)):
+
+    try:
+        payload = jwt.decode(token,setting.SECRET_KEY, algorithms=setting.ALGORITHM)
+        username = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Unable to verify credentials")
+        user = db.query(User).filter(User.email==username).first()
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Unable to verify credentials")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Unable to verify credentials")
+
     existing_item = db.query(Items).filter(Items.id==id)
     if not existing_item.first():
         return {"message":f"No details exists for Item ID {id}"}
-    existing_item.delete()
-    db.commit()
-    return {"message":f"Item ID {id} has been successfully deleted"}
+
+    if existing_item.first().owner_id == user.id:
+        existing_item.delete()
+        db.commit()
+        return {"message":f"Item ID {id} has been successfully deleted"}
+    else:
+        return {"message":"you are not authorized"}

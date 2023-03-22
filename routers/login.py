@@ -21,7 +21,7 @@ def retrieve_token_after_authentication(form_data:OAuth2PasswordRequestForm=Depe
     data = {
         "sub":form_data.username
     }
-    jwt_token = jwt.encode(data, setting.SECURITY_KEY, algorithm=setting.ALGORITHM)
+    jwt_token = jwt.encode(data, setting.SECRET_KEY, algorithm=setting.ALGORITHM)
     return {
         "access_token":jwt_token,
         "token_type":"bearer"
