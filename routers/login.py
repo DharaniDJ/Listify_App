@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models import User
 from hashing import Hasher
+from jose import jwt
+from config import setting
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/token")
 
@@ -16,4 +18,11 @@ def retrieve_token_after_authentication(form_data:OAuth2PasswordRequestForm=Depe
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid Username")
     if not Hasher.verify_password(form_data.password,user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid Password")
-    pass
+    data = {
+        "sub":form_data.username
+    }
+    jwt_token = jwt.encode(data, setting.SECURITY_KEY, algorithm=setting.ALGORITHM)
+    return {
+        "access_token":jwt_token,
+        "token_type":"bearer"
+        }
