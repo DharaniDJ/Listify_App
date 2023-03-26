@@ -5,7 +5,8 @@ from models import Base
 from routers import users, items, login
 from webapps.routers import items as web_items
 
-Base.metadata.create_all(bind=engine)
+# we are using alembic migrations
+# Base.metadata.create_all(bind=engine)
 
 tags_metadata = [
     {
