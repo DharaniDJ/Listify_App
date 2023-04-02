@@ -6,6 +6,11 @@
 
 {% block content %}
     <div class="container">
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{msg}}
+            </div>
+        {% endif %}
         <h3>This is Item Home Page</h3>
         <div class="row">
             {% for item in items %}
