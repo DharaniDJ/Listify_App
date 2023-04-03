@@ -5,6 +5,7 @@ from models import Base
 from routers import users, items, login
 from webapps.routers import items as web_items
 from webapps.routers import users as web_users
+from webapps.routers import auth as web_auth
 from fastapi.staticfiles import StaticFiles
 
 
@@ -37,3 +38,4 @@ app.include_router(items.router)
 app.include_router(login.router)
 app.include_router(web_items.router)
 app.include_router(web_users.router)
+app.include_router(web_auth.router)
