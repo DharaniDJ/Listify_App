@@ -30,7 +30,7 @@ async def registration(request:Request, db:Session=Depends(get_db)):
         db.add(user)
         db.commit()
         db.refresh(user)
-        return responses.RedirectResponse("/?msg=Successfully Registered",status_code=status.HTTP_302_FOUND)
+        return responses.RedirectResponse("/login?msg=Successfully Registered",status_code=status.HTTP_302_FOUND)
     except Exception as e:
         errors.append("Email already exists")
         return templates.TemplateResponse("user_register.html", {"request":request, "errors":errors})

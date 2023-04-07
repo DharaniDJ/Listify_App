@@ -11,8 +11,8 @@ router = APIRouter(include_in_schema=False)
 templates = Jinja2Templates(directory="templates")
 
 @router.get("/login")
-def login(request:Request):
-    return templates.TemplateResponse("login.html",{"request":request})
+def login(request:Request, msg:str=None):
+    return templates.TemplateResponse("login.html",{"request":request, "msg":msg})
 
 # use async method while using forms
 @router.post("/login")
