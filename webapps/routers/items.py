@@ -36,7 +36,7 @@ async def create_an_item(request:Request, db:Session=Depends(get_db)):
         errors.append("Description should be > 10 chars")
     if len(errors)>0:
         return templates.TemplateResponse("create_item.html",{"request":request, "errors":errors})
-    
+
     try:
         token = request.cookies.get("access_token")
         if token is None:
@@ -59,3 +59,23 @@ async def create_an_item(request:Request, db:Session=Depends(get_db)):
     except Exception as e:
         errors.append("something is wrong, kindly contact us")
         return templates.TemplateResponse("create_item.html",{"request":request,"errors":errors})
+
+@router.get("/delete-item")
+def show_items_to_delete(request:Request, db:Session=Depends(get_db)):
+    token = request.cookies.get("access_token")
+    errors = []
+    if token is None:
+        errors.append("You are not logged-in/Authenticated")
+        return templates.TemplateResponse("show_items_to_delete.html",{"request":request,"errors":errors})
+    else:
+        try:
+            scheme,_,param = token.partition(" ")
+            payload = jwt.decode(param, setting.SECRET_KEY,algorithms=setting.ALGORITHM)
+            email = payload.get("sub")
+            user = db.query(User).filter(User.email==email).first()
+            items = db.query(Items).filter(Items.owner_id==user.id).all()
+            return templates.TemplateResponse("show_items_to_delete.html",{"request":request,"items":items})
+        except Exception as e:
+            errors.append("Something is wrong")
+            print(e)
+            return templates.TemplateResponse("show_items_to_delete.html",{"request":request,"errors":errors})
