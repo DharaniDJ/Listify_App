@@ -6,6 +6,8 @@ from database import get_db
 from jose import jwt
 from config import setting
 from datetime import datetime as dt
+from typing import Optional
+
 router = APIRouter(include_in_schema=False)
 templates = Jinja2Templates(directory="templates")
 
@@ -79,3 +81,8 @@ def show_items_to_delete(request:Request, db:Session=Depends(get_db)):
             errors.append("Something is wrong")
             print(e)
             return templates.TemplateResponse("show_items_to_delete.html",{"request":request,"errors":errors})
+
+@router.get("/search")
+def search_item(request:Request, query:Optional[str], db:Session=Depends(get_db)):
+    items = db.query(Items).filter(Items.title.contains(query)).all()
+    return templates.TemplateResponse("item_homepage.html",{"request":request,"items":items})
