@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from schemas import ItemCreate, ShowItem
 from models import Items, User
@@ -43,6 +43,14 @@ def retrieve_all_items(db:Session=Depends(get_db)):
     items = db.query(Items).all()
     return items
 
+@router.get("/item/autocomplete")
+def autocomplete(term:Optional[str],db:Session=Depends(get_db)):
+    items = db.query(Items).filter(Items.title.contains(term)).all()
+    suggestions = []
+    for item in items:
+        suggestions.append(item.title)
+    return suggestions
+
 @router.get("/item/{id}",tags=["items"], response_model=ShowItem)
 def retrieve_item_by_id(id:int, db:Session=Depends(get_db)):
     item = db.query(Items).filter(Items.id==id).first()
@@ -79,3 +87,4 @@ def delete_item_by_id(id:int,db:Session=Depends(get_db), token:str=Depends(oauth
         return {"message":f"Item ID {id} has been successfully deleted"}
     else:
         return {"message":"you are not authorized"}
+
