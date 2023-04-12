@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="container">
-        <h3>Delete Item</h3>
+        <h3 class="text-center">Update and Delete Item</h3>
         {% for error in errors %}
           <div class="alert alert-danger" role="alert">
             {{error}}
@@ -28,7 +28,10 @@
                     <th scope="row">{{loop.index}}</th>
                     <td>{{item.title}}</td>
                     <td>{{item.description}}</td>
-                    <td><button type="button" class="btn btn-danger" onclick="delete_item({{item.id}})">delete</button></td>
+                    <td>
+                      <button type="button" class="btn btn-danger" onclick="delete_item({{item.id}})">Delete</button>
+                      <a href="/update-an-item/{{item.id}}" class="btn btn-primary">Edit</a>
+                    </td>
                     </tr>
                 {% endfor %}
             </tbody>

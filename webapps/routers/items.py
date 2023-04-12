@@ -22,6 +22,12 @@ def item_detail(request:Request, id:int, db:Session=Depends(get_db)):
     user = db.query(User).filter(User.id==item.owner_id).first()
     return templates.TemplateResponse("item_detail.html",{"request":request, "item":item, "user":user })
 
+@router.get("/update-an-item/{id}")
+def update_item(request:Request, id:int, db:Session=Depends(get_db)):
+    item = db.query(Items).filter(Items.id==id).first()
+    user = db.query(User).filter(User.id==item.owner_id).first()
+    return templates.TemplateResponse("update_item.html",{"request":request, "user":user, "item":item})
+
 @router.get("/create-an-item")
 def create_an_item(request:Request):
     return templates.TemplateResponse("create_item.html",{"request":request,})
@@ -62,13 +68,13 @@ async def create_an_item(request:Request, db:Session=Depends(get_db)):
         errors.append("something is wrong, kindly contact us")
         return templates.TemplateResponse("create_item.html",{"request":request,"errors":errors})
 
-@router.get("/delete-item")
+@router.get("/update-delete-item")
 def show_items_to_delete(request:Request, db:Session=Depends(get_db)):
     token = request.cookies.get("access_token")
     errors = []
     if token is None:
         errors.append("You are not logged-in/Authenticated")
-        return templates.TemplateResponse("show_items_to_delete.html",{"request":request,"errors":errors})
+        return templates.TemplateResponse("show_items_to_update_delete.html",{"request":request,"errors":errors})
     else:
         try:
             scheme,_,param = token.partition(" ")
@@ -76,11 +82,11 @@ def show_items_to_delete(request:Request, db:Session=Depends(get_db)):
             email = payload.get("sub")
             user = db.query(User).filter(User.email==email).first()
             items = db.query(Items).filter(Items.owner_id==user.id).all()
-            return templates.TemplateResponse("show_items_to_delete.html",{"request":request,"items":items})
+            return templates.TemplateResponse("show_items_to_update_delete.html",{"request":request,"items":items})
         except Exception as e:
             errors.append("Something is wrong")
             print(e)
-            return templates.TemplateResponse("show_items_to_delete.html",{"request":request,"errors":errors})
+            return templates.TemplateResponse("show_items_to_update_delete.html",{"request":request,"errors":errors})
 
 @router.get("/search")
 def search_item(request:Request, query:Optional[str], db:Session=Depends(get_db)):
