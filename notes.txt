@@ -1,0 +1,18 @@
+FastAPI 0021
+
+Authentication: who the user is?
+
+There are very common methods for authentication:
+- Basic Authentication: use of session and cookies
+- JWT(Json Web Token)(jwt.io): Identify user and send them token and for further request, verify token data
+- OAuth2: Identify using 3rd party(Facebook, Google, GitHub)
+- OpenID connect => (extension of OAuth2)
+
+Authorization: Whether the user has particular access or not? (related to permission)
+fastapi.security
+
+Pass the token in header to Authorization
+
+webapps\routers are for routes to return templates for client-side(fronted)
+
+SQLAlchemy Alembic: used for migrations (alembic init <folder-name>)
