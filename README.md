@@ -77,11 +77,8 @@ pytest app/test.py
 http://127.0.0.1:8000/docs
 ```
 
-<!-- ### Don't forget!
-This project requires creating an Elastic Cloud deployment and adding the Elastic Cloud access credentials to the `config/default.json` file.
+### Don't forget!
+This project requires POSTGRES credentials and JWT SECRET_KEY to `Listify/config.py` file.
 
-The steps on how to accomplish these tasks are outlined in the following blogs:
-- [Part 3: Create an Elastic Cloud deployment](https://dev.to/lisahjung/part-3-create-an-elastic-cloud-deployment-36bn)
-- [Part 4: Securely connect Node.js server to Elastic Cloud](https://dev.to/lisahjung/part-4-securely-connect-nodejs-server-to-elastic-cloud-4f22)
 
-:sparkles:**When running the project from branches 2-6, be sure to update the `config/default.json` file with your access credentials before running the project!**:sparkles: -->
+:sparkles:**When running the project be sure to update the `Listify/config.py` file with your POSTGRES credentials and JWT SECRET_KEY before running the project!**:sparkles:
