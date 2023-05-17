@@ -1,0 +1,24 @@
+1. metadata and docs urls (https://fastapi.tiangolo.com/tutorial/metadata/)
+2. settings and environment variables (https://fastapi.tiangolo.com/advanced/settings/?h=envir)
+3. connect to db(SQLALCHEMY)
+    a. https://docs.sqlalchemy.org/en/20/core/engines.html#postgresql
+    b. https://docs.sqlalchemy.org/en/20/orm/session_basics.html
+    c. https://fastapi.tiangolo.com/tutorial/sql-databases/
+4. tables and relationship
+5. pydantic schema and dependency injection
+6. password hashing
+7. APIRouter
+8. response model
+9. pytest
+10. pytest fixtures
+11. post request API
+12. get API (Path parameters, handling errors)
+13. body updates & json compatible encode
+14. pytest-conv
+15. security
+16. JWT Token
+17. pass token as header while updating testcases
+18. Templates using Jinja2
+19. SQLAlchemy Alembic
+20. serving staticfiles
+21. Implement Login Logic and store JWT Token as HTTP Only Cookie
